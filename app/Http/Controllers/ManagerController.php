@@ -83,7 +83,8 @@ class ManagerController extends Controller
         $user->save();
 
 
-        return redirect(('user-table'));
+        return response()->json(['success' => true]);
+//        return redirect(('user-table'));
     }
 
     function addProductByManager(Request $request){

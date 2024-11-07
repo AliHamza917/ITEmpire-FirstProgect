@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
 {
@@ -16,11 +17,13 @@ class CategoryController extends Controller
 
         Category::create([
 
-            'category_name' =>$request->p_category
+            'category_name' =>$request->p_category,
+            'manager_id' => Auth::id()
         ]);
 
-        return redirect('category-table');
+//        return redirect('category-table');
 
+        return response()->json(['success' => true]);
 
 
     }
@@ -69,7 +72,9 @@ class CategoryController extends Controller
            $category->category_name = $request->p_category;
            $category->save();
 
-           return redirect('category-table')->with('success', 'Category updated successfully');
+           return response()->json(['success' => true]);
+
+//           return redirect('category-table')->with('success', 'Category updated successfully');
        }
    }
 

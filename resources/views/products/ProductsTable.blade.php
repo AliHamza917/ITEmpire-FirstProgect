@@ -6,7 +6,8 @@
         <div class="panel-body">
 
             <!-- **Added Form for Category Selection** -->
-            <form method="GET" action="{{ route('ProductsTable') }}">
+            <form id="filterForm" >
+{{--            <form method="GET" id="filterForm" action="{{ route('ProductsTable') }}">--}}
                <div class="" style="display: flex; gap: 10px;">
                    <div class="form-group col-6">
                        <label for="category_id">Select Category</label>
@@ -87,41 +88,44 @@
                         @if(session('role') === 'admin' || session('role')==='M')
                             <th>User Name</th>
                         @endif
-                        @if(session('role')==='admin')
-                            <th>Manager Name</th>
-                        @endif
+{{--                        @if(session('role')==='admin')--}}
+{{--                            <th>Manager Name</th>--}}
+{{--                        @endif--}}
                         <th>Action</th>
 
 
                     </tr>
                     </thead>
-                    <tbody>
-                    @foreach($products as $product)  <!-- **Changed 'product' to 'products' to match controller -->
-                    <tr class="gradeX">
-                        <td>{{ $index++ }}</td>
-                        <td>{{ $product->product_name }}</td>
-                        <td>{{ $product->product_price }}</td>
-                        <td>
+                    <tbody id="productsTableBody">
 
-                            <img alt="NoImage" src="{{ asset('storage/product-image/'.$product->product_img) }}" width="50">
-                            {{--                                    <img alt="NoImage" src="{{ storage_path('public/product-images/'$product->product_img) }}" width="50">--}}
-                        </td>
-                        <td>{{ $product->category->category_name}}</td>
-                        @if(session('role')=== 'admin' || session('role')==='M')
-                             <td>{{ $product->user->fullname}}</td>
-                        @endif
-                        @if(session('role')==='admin')
-                            <td>{{ $manager->fullname }}</td>
-                        @endif
-                        <td>
-                            <a class="btn btn-warning" href="{{('edit-product')}}/{{$product->id}}">Edit</a> &nbsp;
-                            <a class="btn btn-danger" href="{{('del-product')}}/{{$product->id}}">Delete</a>
-                        </td>
-                    </tr>
-                    @endforeach
+                    @include('products.partials.productsTable', ['products' => $products]) <!-- Loaded initially with products -->
+
                     </tbody>
                 </table>
             </section>
         </div>
     </section>
+
+{{--    Ajax Jquery Function Starts--}}
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        function applyFilters() {
+            $.ajax({
+                url: '{{ route("ProductsTable") }}',
+                type: 'GET',
+                data: $('#filterForm').serialize(), // Send form data
+                success: function(response) {
+                    $('#productsTableBody').html(response); // Update the table body
+                },
+                error: function(xhr, status, error) {
+                    console.error("AJAX Error:", error);
+                }
+            });
+        }
+    </script>
+
+{{--    Ajax Jquery Function Ends--}}
+
+
 @endsection

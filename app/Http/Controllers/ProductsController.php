@@ -39,7 +39,7 @@ class ProductsController extends Controller
 
         $product->save();
 
-        return redirect('products-table');
+        return response()->json(['success' => true]);
 
     }
 
@@ -90,9 +90,13 @@ class ProductsController extends Controller
 
         // Get the products based on the above conditions
         $products = $productsQuery->get();
+        if ($request->ajax()) {
+            return view('products.partials.productsTable', compact('products'))->render();
+        }
 
         // Fetch users list only for admin or manager roles
         $users = [];
+        $managers = [];
         if (Auth::user()->user_role === 'admin' || Auth::user()->user_role === 'M') {
             $usersQuery = User::query();
 
@@ -117,26 +121,6 @@ class ProductsController extends Controller
             'users' => $users,
             'managers' => $managers // Pass managers to the view
         ]);
-
-        // Fetch users list only for admin or manager roles
-//        $users = [];
-//        if (Auth::user()->user_role === 'admin' || Auth::user()->user_role === 'M') {
-//            $usersQuery = User::query();
-//
-//            // Managers see only users they manage
-//            if (Auth::user()->user_role === 'M') {
-//                $usersQuery->where('created_by', $userId);
-//            }
-//
-//            $users = $usersQuery->get();
-//        }
-//
-//        return view('products.ProductsTable', [
-//            'products' => $products,
-//            'categories' => $categories,
-//            'users' => $users
-//        ]);
-
 
     }
 
@@ -198,7 +182,8 @@ class ProductsController extends Controller
 
             $product->save();
 
-            return redirect('products-table')->with('success', 'Product updated successfully');
+            return response()->json(['success' => true]);
+//            return redirect('products-table')->with('success', 'Product updated successfully');
         }
     }
 

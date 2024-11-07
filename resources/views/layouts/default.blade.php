@@ -24,6 +24,7 @@
     <!--[if lt IE 9]>
     <script src="{{asset('js/html5shiv.js')}}"></script>
     <script src="{{asset('js/respond.min.js')}}"></script>
+
     <![endif]-->
 </head>
 <body>
@@ -88,8 +89,6 @@
                 <li>
                     @if(session('role') === 'admin')
                         <a href="create-new-user-by-admin">Create New User</a>
-                    @else
-                        <a href="create-new-user">Create New User</a>
                     @endif
                 </li>
 
@@ -109,7 +108,7 @@
                 <li>
 
                     @if(session('role') === 'user')
-                    <a href="create-product">Add New Product</a>
+                    <a href="{{route('createProductPage')}}">Add New Product</a>
                     @elseif(session('role')=== 'admin')
                         <a href="{{route('createProductByAdminView')}}">Add New Product</a>
                     @else
@@ -167,5 +166,6 @@
     <!--footer end-->
 </section>
 
+@yield('scripts')
 </body>
 </html>

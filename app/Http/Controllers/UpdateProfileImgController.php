@@ -29,10 +29,12 @@ class UpdateProfileImgController extends Controller
             $user->profile_img = $name;
             $user->save();
 
-            return redirect(route('homePage'))->with('info', 'Profile image uploaded successfully.');
+            return response()->json(['success' => true]);
+//            return redirect(route('homePage'))->with('info', 'Profile image uploaded successfully.');
         }
 
-        return redirect(route('homePage'))->with('error', 'Unable to update profile image.');
+        return response()->json(['success' => false]);
+//        return redirect(route('homePage'))->with('error', 'Unable to update profile image.');
     }
 
 

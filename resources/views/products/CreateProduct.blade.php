@@ -3,22 +3,23 @@
 
     <div class="container">
 
-        <form class="form-signin" method="post" action="{{ route('create-product') }}" enctype="multipart/form-data">
+        <form class="form-signin" id="createProductForm" enctype="multipart/form-data">
+{{--        <form class="form-signin" id="createProductForm" method="post" action="{{ route('create-product') }}" enctype="multipart/form-data">--}}
             @csrf
             <h2 class="form-signin-heading">Add A Product</h2>
             <div class="login-wrap">
-                <input name="p_name" type="text" class="form-control" placeholder="Product Name">
+                <input name="p_name" id="p_name" type="text" class="form-control" placeholder="Product Name">
                 <span>
                 @error('p_name')
                     {{$message}}
                     @enderror
             </span>
-                <br><input type="text" name="p_price" class="form-control" placeholder="Product Price">
+                <br><input type="text" name="p_price" id="p_price" class="form-control" placeholder="Product Price">
                 @error('p_price')
                 {{$message}}
                 @enderror
 
-                <select name="category_id" class="form-control" required>
+                <select name="category_id" id="category_id" class="form-control" required>
                     <option value="">Select Category</option>
                     @foreach($categories as $category)
                         <option value="{{ $category->id }}">{{ $category->category_name }}</option>
@@ -32,7 +33,7 @@
                 <br>
                 <div class="fileupload">
 
-                    <input class="form-control fileinput-button" type="file" name="product-img" class="form-control" required/>
+                    <input class="form-control fileinput-button" type="file" name="product-img" id="product-img" class="form-control" required/>
 
                 </div>
                 @error('product-img')
@@ -66,3 +67,40 @@
     </div>
 
 @endsection
+
+@section('scripts')
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#createProductForm').on('submit', function(e) {
+                e.preventDefault(); // Prevent normal form submission
+
+                var formData = new FormData(this); // Gather all form data, including files
+
+                $.ajax({
+                    url: "{{route('create-product') }}", // The route for the controller action
+                    method: 'POST',
+                    data: formData,
+                    processData: false,  // Don't let jQuery process the form data
+                    contentType: false,  // Don't set content-type (for file uploads)
+                    success: function(response) {
+                        if(response.success) {
+                            alert('Product created successfully');
+                            window.location.href = "{{ route('ProductsTable') }}"; // Redirect after success
+                        } else {
+                            alert('Something went wrong. Please try again.');
+                        }
+                    },
+                    error: function(xhr) {
+                        // Handle validation errors
+                        $('#p_name-error').text(xhr.responseJSON.errors.fullname ? xhr.responseJSON.errors.fullname[0] : '');
+                        $('#p_price-error').text(xhr.responseJSON.errors.email ? xhr.responseJSON.errors.email[0] : '');
+                        $('#category_id-error').text(xhr.responseJSON.errors.pswd ? xhr.responseJSON.errors.pswd[0] : '');
+                        $('#product-img-error').text(xhr.responseJSON.errors['profile-img'] ? xhr.responseJSON.errors['profile-img'][0] : '');
+                    }
+                });
+            });
+        });
+    </script>
+@endsection
+
