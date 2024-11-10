@@ -72,6 +72,7 @@ class CategoryController extends Controller
            $category->category_name = $request->p_category;
            $category->save();
 
+
            return response()->json(['success' => true]);
 
 //           return redirect('category-table')->with('success', 'Category updated successfully');

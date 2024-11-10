@@ -15,6 +15,7 @@
 
                         <input class="form-control fileinput-button" type="file" name="profile-img" id="profile-img" class="form-control" />
 
+                        <span id="profile-img-error"></span>
                     </div>
                     @error('profile-img')
                     {{ $message }}
@@ -74,9 +75,17 @@
                         }
                     },
                     error: function(xhr) {
-                        // Handle validation errors
-                       $('#profile-img-error').text(xhr.responseJSON.errors['profile-img'] ? xhr.responseJSON.errors['profile-img'][0] : '');
+                        if (xhr.status === 422) { // Laravel validation error status
+                            const errors = xhr.responseJSON.errors;
+
+                            $('#profile-img-error').text(errors.p_name ? errors.profile-img[0] : '');
+
+                        } else {
+                            alert("Unexpected error: " + xhr.responseText);
+                            console.error("Full error details:", xhr);
+                        }
                     }
+
                 });
             });
         });

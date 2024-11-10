@@ -1,94 +1,94 @@
-@extends('layouts.default')
-@section('container')
+{{--@extends('layouts.default')--}}
+{{--@section('container')--}}
+@include('layouts.default');
+{{--    <section class="panel">--}}
+{{--        <h1>Users Table</h1>--}}
+{{--        <div class="panel-body">--}}
+{{--            <section id="unseen">--}}
+{{--                <table class="table table-bordered table-striped table-condensed">--}}
+{{--                    <thead>--}}
+{{--                    <tr>--}}
 
-    <section class="panel">
-        <h1>Users Table</h1>
-        <div class="panel-body">
-            <section id="unseen">
-                <table class="table table-bordered table-striped table-condensed">
-                    <thead>
-                    <tr>
+{{--                        <th>ID</th>--}}
+{{--                        <th>Name</th>--}}
+{{--                        <th>Email</th>--}}
+{{--                        <th>Role</th>--}}
+{{--                        <th>User Profile</th>--}}
+{{--                        <th>Status</th>--}}
+{{--                        <th>Action</th>--}}
+{{--                    </tr>--}}
+{{--                    </thead>--}}
+{{--                    <tbody>--}}
+{{--                    @foreach($user as $users)--}}
+{{--                        --}}{{--        {{dd($users)}}--}}
+{{--                        @if($users->user_role === 'admin')--}}
 
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Role</th>
-                        <th>User Profile</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @foreach($user as $users)
-                        {{--        {{dd($users)}}--}}
-                        @if($users->user_role === 'admin')
+{{--                        @else--}}
+{{--                            <tr class="gradeX">--}}
+{{--                                <td>{{$index++}}</td>--}}
+{{--                                <td>{{$users->fullname}}</td>--}}
+{{--                                <td>{{$users->email}}</td>--}}
+{{--                                <td>{{$users->user_role}}--}}
 
-                        @else
-                            <tr class="gradeX">
-                                <td>{{$index++}}</td>
-                                <td>{{$users->fullname}}</td>
-                                <td>{{$users->email}}</td>
-                                <td>{{$users->user_role}}
+{{--                                </td>--}}
+{{--                                <td>--}}
+{{--                                    <img alt="NoImage" src="{{ asset('storage/profile-image/'.$users->profile_img) }}" width="50">--}}
+{{--                                </td>--}}
+{{--                                <td>--}}
+{{--                                    @if($users->user_role === 'admin')--}}
+{{--                                        <h4>Admin</h4>--}}
+{{--                                    @else--}}
 
-                                </td>
-                                <td>
-                                    <img alt="NoImage" src="{{ asset('storage/profile-image/'.$users->profile_img) }}" width="50">
-                                </td>
-                                <td>
-                                    @if($users->user_role === 'admin')
-                                        <h4>Admin</h4>
-                                    @else
+{{--                                        @if($users->status === '0')--}}
+{{--                                            Rejected--}}
+{{--                                        @else--}}
+{{--                                            Approved--}}
+{{--                                        @endif--}}
 
-                                        @if($users->status === '0')
-                                            Rejected
-                                        @else
-                                            Approved
-                                        @endif
+{{--                                    @endif--}}
 
-                                    @endif
-
-                                </td>
-
-
-                                <td>
+{{--                                </td>--}}
 
 
-                                    @if($users->status === '0')
-                                        <a class="btn btn-success" href="{{('UpdateStatus')}}/{{$users->id}}">Approve</a>
-                                    @else
-                                        <a class="btn btn-danger" href="{{('UpdateStatus')}}/{{$users->id}}">Reject</a>
-                                    @endif
-
-                                </td>
-
-                                {{--                                Make Manager Or User--}}
-
-                                @if(session('role') === 'admin')
-
-                                    <td>
-
-                                        @if($users->user_role === 'M')
-                                            <a class="btn btn-danger " href="{{('update-role')}}/{{$users->id}}">Make User</a>
-                                        @else
-                                            <a class="btn btn-success " href="{{('update-role')}}/{{$users->id}}">Make Manager</a>
-                                        @endif
+{{--                                <td>--}}
 
 
-                                    </td>
-                        @endif
+{{--                                    @if($users->status === '0')--}}
+{{--                                        <a class="btn btn-success" href="{{('UpdateStatus')}}/{{$users->id}}">Approve</a>--}}
+{{--                                    @else--}}
+{{--                                        <a class="btn btn-danger" href="{{('UpdateStatus')}}/{{$users->id}}">Reject</a>--}}
+{{--                                    @endif--}}
+
+{{--                                </td>--}}
+
+{{--                                --}}{{--                                Make Manager Or User--}}
+
+{{--                                @if(session('role') === 'admin')--}}
+
+{{--                                    <td>--}}
+
+{{--                                        @if($users->user_role === 'M')--}}
+{{--                                            <a class="btn btn-danger " href="{{('update-role')}}/{{$users->id}}">Make User</a>--}}
+{{--                                        @else--}}
+{{--                                            <a class="btn btn-success " href="{{('update-role')}}/{{$users->id}}">Make Manager</a>--}}
+{{--                                        @endif--}}
 
 
-                        @endif
+{{--                                    </td>--}}
+{{--                        @endif--}}
 
-                    @endforeach
 
-                    </tbody>
-                </table>
-            </section>
-        </div>
-    </section>
+{{--                        @endif--}}
 
-@endsection
+{{--                    @endforeach--}}
+
+{{--                    </tbody>--}}
+{{--                </table>--}}
+{{--            </section>--}}
+{{--        </div>--}}
+{{--    </section>--}}
+
+{{--@endsection--}}
 
 
 {{--@php $index= 1; @endphp--}}

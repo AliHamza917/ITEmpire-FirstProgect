@@ -48,6 +48,7 @@ Route::group(['middleware'=>['auth']],function (){
         Route::get('create-product-by-admin',[ViewsController::class,'createProductByAdminView'])->name('createProductByAdminView');
         Route::get('create-new-user-by-admin',[ViewsController::class,'createNewUserByAdminView'])->name('createNewUserByAdminView');
         Route::post('create-new-user-by-admin',[ManagerController::class,'addNewUserByAdmin'])->name('addNewUserByAdmin');
+        Route::get('user-by-manager/{m_id}',[ManagerController::class,'getUserbyManager'])->name('addUserByManager');
 
 
     });

@@ -9,7 +9,7 @@
                 <h2 class="form-signin-heading">Edit Category</h2>
                 <div class="login-wrap">
                     <input name="p_category" id="p_category" type="text" value="{{$category->category_name}}" class="form-control" placeholder="Category Name">
-                    <span>
+                    <span id="p_category-error">
                 @error('p_category')
                         {{$message}}
                         @enderror
@@ -61,7 +61,7 @@
                     contentType: false,  // Don't set content-type (for file uploads)
                     success: function(response) {
                         if(response.success) {
-                            alert('Manager created successfully');
+                            alert('Category Updated successfully');
                             window.location.href = "{{ route('CategoryTable') }}"; // Redirect after success
                         } else {
                             alert('Something went wrong. Please try again.');
@@ -69,7 +69,7 @@
                     },
                     error: function(xhr) {
                         // Handle validation errors
-                      $('#profile-img-error').text(xhr.responseJSON.errors['profile-img'] ? xhr.responseJSON.errors['profile-img'][0] : '');
+                      $('#p_category-error').text(xhr.responseJSON.errors.p_category ? xhr.responseJSON.errors.p_category-error[0] : '');
                     }
                 });
             });

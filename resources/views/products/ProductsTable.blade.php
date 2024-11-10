@@ -43,7 +43,7 @@
                    @if(session('role') === 'admin')
                        <div class="form-group col-6">
                            <label for="manager_id">Select Manager</label>
-                           <select name="manager_id" class="form-control" onchange="this.form.submit()">
+                           <select name="manager_id" class="form-control" onchange="applyFilters()">
                                <option value="">All Managers</option>
                                @foreach($managers as $manager)
                                    <option value="{{ $manager->id }}" {{ request('manager_id') == $manager->id ? 'selected' : '' }}>

@@ -9,12 +9,13 @@
             <h2 class="form-signin-heading">Add A Product</h2>
             <div class="login-wrap">
                 <input name="p_name" id="p_name" type="text" class="form-control" placeholder="Product Name">
-                <span>
+                <span id="p_name-error">
                 @error('p_name')
                     {{$message}}
                     @enderror
             </span>
                 <br><input type="text" name="p_price" id="p_price" class="form-control" placeholder="Product Price">
+                <span id="p_price-error"></span>
                 @error('p_price')
                 {{$message}}
                 @enderror
@@ -25,17 +26,18 @@
                         <option value="{{ $category->id }}">{{ $category->category_name }}</option>
                     @endforeach
                 </select>
-                <span>
-            @error('category_id')
+                <span id="category_id-error">
+                    @error('category_id')
                     {{ $message }}
                     @enderror
-        </span>
+                 </span>
                 <br>
                 <div class="fileupload">
 
                     <input class="form-control fileinput-button" type="file" name="product-img" id="product-img" class="form-control" required/>
 
                 </div>
+                <span id="product-img-error"></span>
                 @error('product-img')
                 {{ $message }}
                 @enderror
@@ -91,13 +93,28 @@
                             alert('Something went wrong. Please try again.');
                         }
                     },
+
                     error: function(xhr) {
-                        // Handle validation errors
-                        $('#p_name-error').text(xhr.responseJSON.errors.fullname ? xhr.responseJSON.errors.fullname[0] : '');
-                        $('#p_price-error').text(xhr.responseJSON.errors.email ? xhr.responseJSON.errors.email[0] : '');
-                        $('#category_id-error').text(xhr.responseJSON.errors.pswd ? xhr.responseJSON.errors.pswd[0] : '');
-                        $('#product-img-error').text(xhr.responseJSON.errors['profile-img'] ? xhr.responseJSON.errors['profile-img'][0] : '');
+
+                        if (xhr.status === 422) { // Laravel validation error status
+                            const errors = xhr.responseJSON.errors;
+
+                            $('#p_name-error').text(errors.p_price ? errors.p_name[0] : '');
+                            $('#p_price-error').text(errors.category_id ? errors.p_price[0] : '');
+                            $('#category_id-error').text(errors.category_id ? errors.category_id[0] : '');
+                            $('#product-img-error').text(errors['product-img'] ? errors['product-img'][0] : '');
+                        } else {
+                            alert("Unexpected error: " + xhr.responseText);
+                            console.error("Full error details:", xhr);
+                        }
                     }
+                    // error: function(xhr) {
+                    //     // Handle validation errors
+                    //     $('#p_name-error').text(xhr.responseJSON.errors.fullname ? xhr.responseJSON.errors.fullname[0] : '');
+                    //     $('#p_price-error').text(xhr.responseJSON.errors.email ? xhr.responseJSON.errors.email[0] : '');
+                    //     $('#category_id-error').text(xhr.responseJSON.errors.pswd ? xhr.responseJSON.errors.pswd[0] : '');
+                    //     $('#product-img-error').text(xhr.responseJSON.errors['profile-img'] ? xhr.responseJSON.errors['profile-img'][0] : '');
+                    // }
                 });
             });
         });

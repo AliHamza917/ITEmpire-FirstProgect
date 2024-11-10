@@ -91,6 +91,11 @@
                         <a href="create-new-user-by-admin">Create New User</a>
                     @endif
                 </li>
+                <li>
+                    @if(session('role') === 'M')
+                        <a href="{{route('createNewUser')}}">Create New User</a>
+                    @endif
+                </li>
 
 
                 <li>

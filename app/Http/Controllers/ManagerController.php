@@ -32,7 +32,8 @@ class ManagerController extends Controller
         $user->save();
 
 
-        return redirect(('user-table'));
+        return response()->json(['success' => true]);
+//        return redirect(('user-table'));
     }
  function addNewUserByAdmin(Request $request){
         $request->validate([
@@ -107,7 +108,7 @@ class ManagerController extends Controller
         $product->category_id = $request['category_id'];
         $product->user_id = $request['user_id'];
         $product->product_img = $name;
-        $product->m_id = $request['user_id'];
+        $product->m_id = Auth::id();
 //        $product->u_id = $userId;
         $product->status = '1';
 
@@ -115,7 +116,8 @@ class ManagerController extends Controller
 
         $product->save();
 
-        return redirect('products-table');
+        return response()->json(['success' => true]);
+//        return redirect('products-table');
     }
 
      function addProductByAdmin(Request $request){
@@ -146,9 +148,18 @@ class ManagerController extends Controller
 
             $product->save();
 
-            return redirect('products-table');
+         return response()->json(['success' => true]);
+//            return redirect('products-table');
         }
 
+
+        function getUserbyManager($m_id){
+
+
+            $m_users =User::where('created_by' , $m_id)->get();
+//            dd($m_users);
+            return response()->json($m_users);
+        }
 
 
 

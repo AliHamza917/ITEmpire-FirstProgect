@@ -79,13 +79,13 @@ class ProductsController extends Controller
         }
         if (!empty($request->u_id)) {
             $productsQuery->where('user_id', $request->u_id);
-//            var_dump($productsQuery);
 
         }
 
         // Apply manager filter if selected and user is admin
         if (!empty($request->manager_id) && Auth::user()->user_role === 'admin') {
             $productsQuery->where('m_id', $request->manager_id);
+            
         }
 
         // Get the products based on the above conditions

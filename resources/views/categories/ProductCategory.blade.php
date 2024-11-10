@@ -67,12 +67,25 @@
                         }
                     },
                     error: function(xhr) {
-                        // Handle validation errors
-                        $('#p_category-error').text(xhr.responseJSON.errors['profile-img'] ? xhr.responseJSON.errors['Product Category-error'][0] : '');
+
+                        if (xhr.status === 422) { // Laravel validation error status
+                            const errors = xhr.responseJSON.errors;
+
+                            $('#p_category-error').text(errors.profile-img ? errors.profile-img[0] : '');
+
+                        } else {
+                            alert("Unexpected error: " + xhr.responseText);
+                            console.error("Full error details:", xhr);
+                        }
+                    // error: function(xhr) {
+                    //     // Handle validation errors
+                    //     $('#p_category-error').text(xhr.responseJSON.errors['profile-img'] ? xhr.responseJSON.errors['Product Category-error'][0] : '');
                     }
                 });
+
             });
         });
+
     </script>
 @endsection
 

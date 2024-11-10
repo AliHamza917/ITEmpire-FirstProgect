@@ -11,7 +11,7 @@
             <div class="login-wrap">
                 <p>Enter personal details below</p>
                 <input type="text" name="fullname" id="fullname"  class="form-control" placeholder="Full Name" autofocus>
-                <span>
+                <span id="fullname-error">
                 @error('fullname')
                     {{$message}}
                     @enderror
@@ -19,13 +19,13 @@
 
                 <p> Enter your account details below</p>
                 <input type="email" name="email" id="email" class="form-control" placeholder="Email" autofocus><br>
-                <span>
+                <span id="email-error">
                 @error('email')
                     {{$message}}
                     @enderror
             </span>
                 <input type="password" name="pswd" id="pswd" class="form-control" placeholder="Password">
-                <span>
+                <span id="pswd-error">
                 @error('pswd')
                     {{$message}}
                     @enderror
@@ -36,9 +36,11 @@
                     <input class="form-control fileinput-button" type="file" name="profile-img" id="profile-img" class="form-control" required/>
 
                 </div>
-                @error('profile-img')
-                {{ $message }}
-                @enderror
+                <span id="profile-img-error">
+                    @error('profile-img')
+                    {{ $message }}
+                    @enderror
+                </span>
                 <br>
 
 
@@ -77,12 +79,25 @@
                         }
                     },
                     error: function(xhr) {
-                        // Handle validation errors
-                        $('#fullname-error').text(xhr.responseJSON.errors.fullname ? xhr.responseJSON.errors.fullname[0] : '');
-                        $('#email-error').text(xhr.responseJSON.errors.email ? xhr.responseJSON.errors.email[0] : '');
-                        $('#pswd-error').text(xhr.responseJSON.errors.pswd ? xhr.responseJSON.errors.pswd[0] : '');
-                        $('#profile-img-error').text(xhr.responseJSON.errors['profile-img'] ? xhr.responseJSON.errors['profile-img'][0] : '');
+                        if (xhr.status === 422) { // Laravel validation error status
+                            const errors = xhr.responseJSON.errors;
+
+                            $('#fullname-error').text(errors.fullname ? errors.fullname[0] : '');
+                            $('#email-error').text(errors.email ? errors.email[0] : '');
+                            $('#pswd-error').text(errors.pswd ? errors.pswd[0] : '');
+                            $('#profile-img-error').text(errors['product-img'] ? errors['profile-img'][0] : '');
+                        } else {
+                            alert("Unexpected error: " + xhr.responseText);
+                            console.error("Full error details:", xhr);
+                        }
                     }
+                    // error: function(xhr) {
+                    //     // Handle validation errors
+                    //     $('#fullname-error').text(xhr.responseJSON.errors.fullname ? xhr.responseJSON.errors.fullname[0] : '');
+                    //     $('#email-error').text(xhr.responseJSON.errors.email ? xhr.responseJSON.errors.email[0] : '');
+                    //     $('#pswd-error').text(xhr.responseJSON.errors.pswd ? xhr.responseJSON.errors.pswd[0] : '');
+                    //     $('#profile-img-error').text(xhr.responseJSON.errors['profile-img'] ? xhr.responseJSON.errors['profile-img'][0] : '');
+                    // }
                 });
             });
         });
