@@ -1,105 +1,90 @@
-@php $index= 1;@endphp
 @extends('layouts.default')
+
 @section('container')
     <section class="panel">
-<h1>Users Table</h1>
-        <div class="panel-body">
-            <!-- **Added Form for Manager Selection** -->
-            @if(session('role') === 'admin')
-                <form id="filterForm" >
-                {{--            <form method="GET" id="filterForm" action="{{ route('ProductsTable') }}">--}}
+        <h1>Users Table</h1>
 
 
-                        <div class="form-group col-6" style="width: 30%">
-                            <label for="manager_id">Select Manager</label>
-                            <select name="manager_id" class="form-control" onchange="applyFilters()">
-                                <option value="">All Users</option>
-                                @foreach($managers as $manager)
-                                        <option value="{{ $manager->id }}" {{ request('manager_id') == $manager->id ? 'selected' : '' }}>
-                                            {{ $manager->fullname }}
-                                        </option>
-
-                                @endforeach
-                            </select>
-                        </div>
-
-
-
-            </form>
-            @endif
-            <!-- **End of Form** -->
-        </div>
-
-            <section id="unseen">
-                <table class="table table-bordered table-striped table-condensed">
-                    <thead>
-                    <tr>
-
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Role</th>
-                        <th>User Profile</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                    </thead>
-                    <tbody id="userTableBody">
-
-                    @include('users.partials.userTable', ['users' => $users]) <!-- Loaded initially with Users -->
-
-                    </tbody>
-                </table>
-            </section>
-        </div>
+        <section id="unseen">
+            <table class="table table-bordered table-striped table-condensed data-table" style="width: 100%">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Profile Image</th>
+                    <th>User Role</th>
+{{--                    <th>Created By</th>--}}
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Data will be populated here via AJAX -->
+                </tbody>
+            </table>
+        </section>
     </section>
-
 @endsection
+
 @section('scripts')
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
 
-    {{--    Ajax Jquery Function Starts--}}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var table = $('.data-table').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: "{{ route('UserTable') }}",  // URL for user data
+                columns: [
+                    { data: 'DT_RowIndex', name: 'DT_RowIndex' },
+                    { data: 'fullname', name: 'fullname' },
+                    { data: 'email', name: 'email' },
+                    { data: 'status', name: 'status', render: function(data, type, row) {
+                            return data == 1 ? 'Active' : 'Deactivated';
+                        }
+                    },
+                    { data: 'profile_img', name: 'profile_img', render: function(data, type, row) {
+                            return data ? '<img src="storage/profile-image/' + data + '" width="50" height="50" />' : 'No Image';
+                        }
+                    },
+                    { data: 'user_role', name: 'user_role', render: function(data, type, row) {
+                            if (data === 'M') {
+                                return 'Manager';
+                            } else if (data === 'user') {
+                                return 'User';
+                            } else {
+                                return 'Admin';
+                            }
+                        }
+                    },
+                    { data: 'action', name: 'action', orderable: false, searchable: false }
+                ]
+            });
 
-    <script>
-        $(document).ready(function() {
-            $('#filterForm').on('change', 'select[name="manager_id"]', function() {
-                applyFilters();
+            // Handle the update status button click
+            $('.data-table').on('click', '.update-status', function () {
+                var userId = $(this).data('id');
+                var url = "{{ route('UpdateStatus', ':id') }}".replace(':id', userId);
+
+                $.ajax({
+                    url: url,
+                    type: 'GET', // Use GET request
+                    success: function (response) {
+                        if (response.success) {
+                            alert('Update User status');
+                            table.ajax.reload(null, false); // Reload the table without resetting pagination
+                        }
+                    },
+                    error: function (xhr) {
+                        alert('Error updating status');
+                    }
+                });
             });
         });
-
-        function applyFilters() {
-            $.ajax({
-                url: '{{ route("UserTable") }}', // Adjusted route if needed
-                type: 'GET',
-                data: $('#filterForm').serialize(), // Send serialized form data
-                success: function(response) {
-                    $('#userTableBody').html(response); // Update the table body with the new data
-                },
-                error: function(xhr, status, error) {
-                    console.error("AJAX Error:", error);
-                }
-            });
-        }
     </script>
-
-
-
-{{--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>--}}
-{{--    <script>--}}
-{{--        function applyFilters() {--}}
-{{--            $.ajax({--}}
-{{--                url: '{{ route("UserTable") }}',--}}
-{{--                type: 'GET',--}}
-{{--                data: $('#filterForm').serialize(), // Send form data--}}
-{{--                success: function(response) {--}}
-{{--                    $('#userTableBody').html(response); // Update the table body--}}
-{{--                },--}}
-{{--                error: function(xhr, status, error) {--}}
-{{--                    console.error("AJAX Error:", error);--}}
-{{--                }--}}
-{{--            });--}}
-{{--        }--}}
-{{--    </script>--}}
-
-    {{--    Ajax Jquery Function Ends--}}
 
 @endsection

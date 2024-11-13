@@ -2,6 +2,7 @@
 @extends('layouts.default')
 @section('container')
     <section class="panel">
+{{--        {{dd($Allusers)}}--}}
         <h1>Products Table</h1>
         <div class="panel-body">
 
@@ -11,7 +12,7 @@
                <div class="" style="display: flex; gap: 10px;">
                    <div class="form-group col-6">
                        <label for="category_id">Select Category</label>
-                       <select name="category_id" class="form-control" onchange="this.form.submit()">
+                       <select name="category_id" class="form-control" onchange="applyFilters()">
                            <option value="">All Categories</option>
                            @foreach($categories as $category)
                                <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
@@ -25,12 +26,14 @@
 
                        <div class="form-group col-6">
                            <label for="u_id">Select User</label>
-                           <select name="u_id" class="form-control" onchange="this.form.submit()">
+                           <select name="u_id" class="form-control" onchange="applyFilters()">
                                <option value="">All Users</option>
-                               @foreach($users as $user)
-                                   <option value="{{ $user->id }}" {{ request('u_id') == $user->id ? 'selected' : '' }}>
-                                       {{ $user->fullname }}
-                                   </option>
+                               @foreach($Allusers as $user)
+                                   @if($user->user_role === 'user')
+                                       <option value="{{ $user->id }}" {{ request('u_id') == $user->id ? 'selected' : '' }}>
+                                           {{ $user->fullname }}
+                                       </option>
+                                   @endif
                                @endforeach
 {{--                               @foreach($products as $product)--}}
 {{--                                   <option value="{{ $product->user->id }}">{{ $product->user->fullname}}</option>--}}
@@ -109,23 +112,34 @@
 {{--    Ajax Jquery Function Starts--}}
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+
     <script>
+        $(document).ready(function() {
+            $('#filterForm select').on('change', function() {
+                applyFilters();
+            });
+        });
+
         function applyFilters() {
             $.ajax({
                 url: '{{ route("ProductsTable") }}',
                 type: 'GET',
-                data: $('#filterForm').serialize(), // Send form data
+                data: $('#filterForm').serialize(), // Send serialized form data
                 success: function(response) {
                     $('#productsTableBody').html(response); // Update the table body
+
                 },
                 error: function(xhr, status, error) {
                     console.error("AJAX Error:", error);
+                    console.error("Details:", xhr.responseText); // Log the response for debugging
                 }
             });
         }
+
     </script>
 
-{{--    Ajax Jquery Function Ends--}}
 
 
 @endsection

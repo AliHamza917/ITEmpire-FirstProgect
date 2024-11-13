@@ -42,14 +42,19 @@ class ProductsController extends Controller
         return response()->json(['success' => true]);
 
     }
-
+//
     function ProductsTable(Request $request){
-
+//        dd($request->all());
         $categories = Category::all();
+        $Allusers = collect();  // Ensure this variable is always defined
+
+
+
+
+
 
         $productsQuery = Product::with(['category', 'user']);
 //        Practice
-
 
 
         // Check user role and apply appropriate conditions
@@ -85,12 +90,13 @@ class ProductsController extends Controller
         // Apply manager filter if selected and user is admin
         if (!empty($request->manager_id) && Auth::user()->user_role === 'admin') {
             $productsQuery->where('m_id', $request->manager_id);
-            
+
         }
 
         // Get the products based on the above conditions
         $products = $productsQuery->get();
         if ($request->ajax()) {
+
             return view('products.partials.productsTable', compact('products'))->render();
         }
 
@@ -111,7 +117,17 @@ class ProductsController extends Controller
             if (Auth::user()->user_role === 'M') {
                 $usersQuery->where('created_by', $userId);
             }
+            $Allusers = collect();
+            if (Auth::user()->user_role === 'admin'){
+                if (!empty($request->manager_id)){
+//                    dd($request->manager_id);
+                    $Allusers = User::where('created_by' , $request->manager_id)->get();
 
+                }else{
+                    $Allusers =User::all();
+                }
+
+            }
             $users = $usersQuery->get();
         }
 
@@ -119,7 +135,8 @@ class ProductsController extends Controller
             'products' => $products,
             'categories' => $categories,
             'users' => $users,
-            'managers' => $managers // Pass managers to the view
+            'managers' => $managers, // Pass managers to the view
+            'Allusers' => $Allusers // Pass managers to the view
         ]);
 
     }

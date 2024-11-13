@@ -7,7 +7,6 @@
     <meta name="description" content="">
     <meta name="author" content="Mosaddek">
     <meta name="keyword" content="FlatLab, Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
-    <link rel="shortcut icon" href="http://thevectorlab.net/flatlab/img/favicon.png"/>
 
     <title>FlatLab - Flat & Responsive Bootstrap Admin Template</title>
 
@@ -19,6 +18,10 @@
     <!-- Custom styles for this template -->
     <link href="{{asset('css/style.css')}}" rel="stylesheet" />
     <link href="{{asset('css/style-responsive.css" rel="stylesheet')}}" />
+
+    <!--dynamic table-->
+    <link href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 tooltipss and media queries -->
     <!--[if lt IE 9]>
@@ -42,9 +45,7 @@
         <div class="top-nav ">
             <!--search & user info start-->
             <ul class="nav pull-right top-menu">
-                <li>
-                    <input type="text" class="form-control search" placeholder="Search">
-                </li>
+
                 <!-- user login dropdown start-->
                 <li class="dropdown">
                     <a data-toggle="dropdown" class="dropdown-toggle" href="">
